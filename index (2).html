@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ujjwal Tours & Travels - Duty Slip</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f2f2;
+}
+
+.controls{
+    text-align:center;
+    margin:20px;
+}
+
+button{
+    padding:10px 20px;
+    margin:5px;
+    cursor:pointer;
+}
+
+.a4{
+    width:794px;
+    background:#fff;
+    margin:auto;
+    padding:20px;
+}
+
+.slip{
+    border-bottom:2px solid #000;
+    padding:15px 0;
+}
+
+.header{
+    text-align:center;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.sub{
+    text-align:center;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.line{
+    border-bottom:1px solid #000;
+    display:inline-block;
+    width:180px;
+    height:18px;
+}
+
+input{
+    border:none;
+    border-bottom:1px solid #000;
+    height:18px;
+    font-size:12px;
+}
+
+.full{ width:95%; }
+.medium{ width:200px; }
+.small{ width:120px; }
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:8px;
+    font-size:11px;
+}
+
+table, th, td{
+    border:1px solid #000;
+}
+
+th, td{
+    padding:3px;
+    text-align:center;
+}
+
+.footer{
+    font-size:11px;
+    margin-top:5px;
+}
+
+.sign{
+    text-align:right;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+    <button onclick="downloadBlank()">Download Blank PDF</button>
+    <button onclick="downloadFilled()">Download Filled PDF</button>
+</div>
+
+<div class="a4" id="pdfArea">
+
+    <!-- ===== SLIP TEMPLATE ===== -->
+    <div class="slip" id="templateSlip">
+        <div class="header">Ujjwal Tours & Travels</div>
+        <div class="sub">Mobile Numbers 9137054614 / 8452919072</div>
+
+        BILL TO <input class="medium fill"> &nbsp;&nbsp;
+        DUTY SLIP NO.: <input class="small fill"><br><br>
+
+        GUEST NAME <input class="medium fill"> &nbsp;&nbsp;
+        MOBILE NO.: <input class="medium fill"><br><br>
+
+        ADDRESS <input class="full fill"><br><br>
+
+        BOOKED BY <input class="medium fill"> &nbsp;&nbsp;
+        MOBILE NO.: <input class="medium fill"><br><br>
+
+        DATE FROM <input type="date" class="small fill"> &nbsp;&nbsp;
+        DATE TO <input type="date" class="small fill"><br><br>
+
+        CAR NO. <input class="small fill"> &nbsp;&nbsp;
+        DRIVER NAME <input class="medium fill"> &nbsp;&nbsp;
+        REPORTING TIME <input type="time" class="small fill"><br><br>
+
+        LOCAL / OUTSTATION ______________________<br>
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>OP TIME</th>
+                <th>OP KMS</th>
+                <th>CLO TIME</th>
+                <th>CLO KMS</th>
+                <th>TOTAL TIME</th>
+                <th>TOTAL KMS</th>
+                <th>EX TIME</th>
+                <th>EX KMS</th>
+            </tr>
+            <tr><td height="25"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td height="25"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td height="25"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td height="25"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+
+        <div class="footer">
+            Hours & Kms will be charged from garage to garage (24 hours service)<br>
+            Please spare driver for Lunch / Dinner.<br>
+            Valuable and any goods kept in the car at user’s risk.<br>
+            Toll / Parking.
+        </div>
+
+        <div class="sign">SIGN ____________________</div>
+    </div>
+
+</div>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+// Duplicate slip to create 2 on A4
+const original = document.getElementById("templateSlip");
+const clone = original.cloneNode(true);
+document.getElementById("pdfArea").appendChild(clone);
+
+function clearInputs(){
+    document.querySelectorAll(".fill").forEach(i=>i.value="");
+}
+
+function downloadBlank(){
+    clearInputs();
+    generatePDF("Blank_Duty_Slip.pdf");
+}
+
+function downloadFilled(){
+    generatePDF("Filled_Duty_Slip.pdf");
+}
+
+function generatePDF(filename){
+    html2canvas(document.querySelector("#pdfArea"), {scale:2}).then(canvas=>{
+        const img = canvas.toDataURL("image/png");
+        const pdf = new jsPDF('p','pt','a4');
+        pdf.addImage(img,'PNG',0,0,595,842);
+        pdf.save(filename);
+    });
+}
+</script>
+
+</body>
+</html>
